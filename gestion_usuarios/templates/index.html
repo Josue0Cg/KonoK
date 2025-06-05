@@ -1,15 +1,28 @@
-{% load static %}  <!-- Importante -->
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Bienvenido</title>
-    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+    <title>KoKalt - Inicio</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Bienvenido al Sistema</h1>
-    <button onclick="window.location.href='/usuarios/'">Usuarios</button>
-    <button onclick="window.location.href='/usuarios/acciones/'">Backups</button>
+    <header class="header">
+        <h1>KonoK</h1>
+    </header>
+    <nav class="navbar">
+        <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/usuarios/">Usuarios</a></li>
+            <li><a href="/usuarios/acciones/">Backups</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="contenido">
+        <h2>Bienvenido al Sistema de Gestión KonoK</h2>
+        <p>Selecciona una opción en el menú de navegación para comenzar.</p>
+    </main>
 </body>
 </html>

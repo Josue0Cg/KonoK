@@ -1,0 +1,57 @@
+/* Barra superior */
+.header {
+    background-color: #1c6fa7;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 28px;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Barra de navegación */
+.navbar {
+    background-color: #074584;
+    overflow: hidden;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.navbar ul li {
+    display: inline-block;
+    margin: 0 15px;
+}
+
+.navbar ul li a {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    padding: 14px 20px;
+    font-size: 18px;
+    font-family: 'Arial', sans-serif;
+}
+
+.navbar ul li a:hover {
+    background-color: #1abc9c;
+    border-radius: 5px;
+}
+
+/* Contenido principal */
+.contenido {
+    margin: 40px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.contenido h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.contenido p {
+    font-size: 18px;
+}
