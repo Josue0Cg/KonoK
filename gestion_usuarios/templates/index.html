@@ -1,0 +1,15 @@
+{% load static %}  <!-- Importante -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+    <h1>Bienvenido al Sistema</h1>
+    <button onclick="window.location.href='/usuarios/'">Usuarios</button>
+    <button onclick="window.location.href='/usuarios/acciones/'">Backups</button>
+</body>
+</html>

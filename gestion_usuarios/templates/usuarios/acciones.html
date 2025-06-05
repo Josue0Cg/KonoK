@@ -1,0 +1,47 @@
+<h1>Gestión de Exportaciones, Importaciones y Backups</h1>
+
+<h2>Configuración Backup Automático</h2>
+
+<form method="post" action="{% url 'config_backup_guardar' %}">
+    {% csrf_token %}
+    <label for="hora_backup">Hora diaria para backup automático:</label>
+    <input type="time" id="hora_backup" name="hora_backup" value="{{ config.hora_backup|default_if_none:'' }}" required>
+    <label>
+        <input type="checkbox" name="activa" {% if config and config.activa %}checked{% endif %}>
+        Activar backup automático
+    </label>
+    <button type="submit">Guardar Configuración</button>
+</form>
+
+<h2>Otras Acciones</h2>
+<ul>
+    <li><a href="{% url 'exportar_usuarios_sql' %}">📤 Exportar usuarios a archivo SQL</a></li>
+    <li><a href="{% url 'importar_usuarios_sql' %}">📥 Importar usuarios desde archivo SQL</a></li>
+</ul>
+
+<h2>Historial de Backups</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Archivo</th>
+      <th>Fecha</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for backup in historial %}
+    <tr>
+      <td>{{ backup.archivo }}</td>
+      <td>{{ backup.fecha|date:"M d, Y, H:i a" }}</td>
+      <td>
+        <a href="{% url 'descargar_backup' backup.archivo %}">Descargar</a> |
+        <a href="{% url 'visualizar_backup' backup.archivo %}" target="_blank">Visualizar</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">No hay backups registrados.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="{% url 'usuario_lista' %}">← Volver a la lista de usuarios</a>

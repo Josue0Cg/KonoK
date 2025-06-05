@@ -1,0 +1,11 @@
+<h1>📥 Importar Usuarios desde Archivo SQL</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="archivo_sql">Selecciona archivo .sql:</label>
+    <input type="file" name="archivo_sql" accept=".sql" required>
+    <br><br>
+    <button type="submit">Importar</button>
+</form>
+
+<a href="{% url 'acciones_backup' %}">← Volver</a>
