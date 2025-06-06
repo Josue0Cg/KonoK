@@ -1,57 +1,228 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 /* Barra superior */
 .header {
-    background-color: #1c6fa7;
-    color: white;
+    background-color: #06314e;
     padding: 20px;
     text-align: center;
-    font-size: 28px;
     font-family: 'Arial', sans-serif;
 }
 
-/* Barra de navegación */
+.header h1 {
+    color: white;
+    font-size: 48px;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.header h1:hover {
+    color: #CCCCCC; 
+}
+
+
+/* Hover con CSS puro */
+.header:hover {
+    background-color: #074584; /* Azul oscuro */
+}
+
+/* Navbar General */
 .navbar {
     background-color: #074584;
-    overflow: hidden;
+    display: flex;
+    justify-content: center;
 }
 
 .navbar ul {
+    display: flex;
     list-style-type: none;
-    margin: 0;
-    padding: 0;
-    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    max-width: 1000px; 
+    justify-content: space-around; 
 }
 
 .navbar ul li {
-    display: inline-block;
-    margin: 0 15px;
+    flex: 1; 
+    text-align: center;
 }
 
 .navbar ul li a {
-    display: inline-block;
     color: white;
     text-decoration: none;
-    padding: 14px 20px;
-    font-size: 18px;
-    font-family: 'Arial', sans-serif;
+    padding: 15px 20px; 
+    font-size: 20px; 
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .navbar ul li a:hover {
-    background-color: #1abc9c;
+    background-color: #074584;
+    transform: scale(1.05);
+}
+
+.navbar ul li a.active {
+    background-color: #06263b;
+    font-weight: bold; 
+}
+
+
+@media (max-width: 768px) {
+    .navbar ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        width: 100%;
+    }
+
+    .navbar ul li {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 5px 0;
+    }
+
+    .navbar ul li a {
+        display: block;
+        width: 90%;
+        text-align: center;
+        padding: 15px 0;
+        font-size: 20px;
+        background-color: #06314e;
+        border-radius: 10px;
+    }
+
+    .navbar ul li a:hover {
+        background-color: #074584;
+    }
+}
+/* Responsive navbar */
+@media (max-width: 768px) {
+    .navbar ul {
+        flex-direction: column;
+    }
+
+    .navbar ul li {
+        margin: 10px 0;
+    }
+}
+
+/* Línea divisoria */
+.divider {
+    border: none;
+    height: 3px;
+    background-color: #1c6fa7;
+    width: 80%;
+    margin: 30px auto;
     border-radius: 5px;
 }
 
-/* Contenido principal */
-.contenido {
-    margin: 40px;
+/* Sección Información */
+.info {
     text-align: center;
-    font-family: 'Arial', sans-serif;
+    padding: 20px;
 }
 
-.contenido h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
+.info-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
-.contenido p {
+.info-img {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.info-text {
+    max-width: 500px;
+    margin: 10px;
+    text-align: left;
+}
+
+/* Misión y Visión */
+.mission-vision {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+    padding: 20px;
+    text-align: center;
+}
+
+.mission, .vision {
+    width: 300px;
+}
+
+/* Valores */
+.valores {
+    text-align: center;
+    padding: 20px;
+}
+
+.valores ul {
+    list-style: none;
+    padding: 0;
+}
+
+.valores li {
+    margin: 10px 0;
     font-size: 18px;
+}
+
+/* Card Index */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 20px;
+}
+
+.card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    width: 250px;
+    text-align: center;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.card img {
+    width: auto;
+    height: auto;
+    max-height: 200px;
+    object-fit: contain;
+    padding: 10px;
+}
+
+.card h4 {
+    margin: 15px 0;
+    color: #1c6fa7;
+    font-size: 20px;
+}
+
+.card:hover {
+    transform: scale(1.05); 
+}
+
+@media (max-width: 768px) {
+    .cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        width: 80%; /* Más ancho en móvil */
+    }
 }

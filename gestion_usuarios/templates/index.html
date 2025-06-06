@@ -4,25 +4,82 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>KonoK - Inicio</title>
+    <title>KONOK - Inicio</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <header class="header">
+    <!-- Barra superior -->
+    <header class="header" id="header">
         <h1>KonoK</h1>
     </header>
+
+    <!-- Barra de navegación -->
     <nav class="navbar">
         <ul>
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/usuarios/">Usuarios</a></li>
-            <li><a href="/usuarios/acciones/">Backups</a></li>
+            <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Inicio</a></li>
+            <li><a href="/login/">Login</a></li>
+            <li><a href="/contacto/">Contacto</a></li>
         </ul>
     </nav>
+    <hr class="divider">
+    <!-- Sección Información -->
+    <section class="info">
+        <h2>Nosotros</h2>
+        <div class="info-content">
+            <img src="{% static 'img/konok.png' %}" alt="Imagen Informativa" class="info-img">
+            <div class="info-text">
+                <p>Bienvenido al sistema KonoK, una plataforma diseñada para mejorar tu experiencia de gestión empresarial.</p>
+                <p>Ofrecemos soluciones efectivas y adaptadas a tus necesidades específicas.</p>
+                <p>Explora nuestras herramientas para optimizar tus procesos y alcanzar tus metas.</p>
+            </div>
+        </div>
+    </section>
 
-    <!-- Contenido principal -->
-    <main class="contenido">
-        <h2>Bienvenido al Sistema de Gestión KonoK</h2>
-        <p>Selecciona una opción en el menú de navegación para comenzar.</p>
-    </main>
+    <hr class="divider">
+
+    <!-- Sección de Cards -->
+    <section class="cards">
+        <div class="card">
+            <img src="{% static 'img/Electronic.png' %}" alt="Electrónicos">
+            <h4>Electrónicos</h4>
+        </div>
+        <div class="card">
+            <img src="{% static 'img/Computo.png' %}" alt="Cómputo">
+            <h4>Cómputo</h4>
+        </div>
+        <div class="card">
+            <img src="{% static 'img/Soporte.png' %}" alt="Soporte Técnico">
+            <h4>Soporte Técnico</h4>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+      <!-- Sección Misión y Visión -->
+    <section class="mission-vision">
+        <div class="mission">
+            <h3>Misión</h3>
+            <p>Proporcionar soluciones tecnológicas innovadoras que impulsen la eficiencia organizacional.</p>
+        </div>
+        <div class="vision">
+            <h3>Visión</h3>
+            <p>Ser líderes en el desarrollo de plataformas digitales confiables y eficientes para empresas modernas.</p>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- Sección Valores -->
+    <section class="valores">
+        <h3>Valores</h3>
+        <ul>
+            <li>Innovación</li>
+            <li>Compromiso</li>
+            <li>Responsabilidad</li>
+            <li>Excelencia</li>
+        </ul>
+    </section>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
 </body>
 </html>
