@@ -19,7 +19,7 @@
     <nav class="navbar">
         <ul>
             <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Inicio</a></li>
-            <li><a href="/login/">Login</a></li>
+            <li><a href="#" id="loginBtn">Login</a></li>
             <li><a href="/contacto/">Contacto</a></li>
         </ul>
     </nav>
@@ -82,6 +82,35 @@
         </ul>
     </section>
 
-    <script src="{% static 'js/scripts.js' %}"></script>
+<!-- Modal (Login / Register) -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <div class="form-container" id="formContainer">
+            <!-- Login Form -->
+            <div class="form login-form">
+                <h2>Login</h2>
+                <input type="text" placeholder="Usuario" required>
+                <input type="password" placeholder="Contraseña" required>
+                <button type="submit">Entrar</button>
+                <p>¿No tienes cuenta? <a href="#" id="showRegister">Regístrate</a></p>
+            </div>
+            <!-- Register Form -->
+            <form method="POST" action="{% url 'register_user' %}" class="form register-form">
+                {% csrf_token %}
+                <h2>Registro</h2>
+                <input type="text" name="username" placeholder="Usuario" required>
+                <input type="email" name="email" placeholder="Correo" required>
+                <input type="password" name="password" placeholder="Contraseña" required>
+                <input type="password" name="confirm_password" placeholder="Confirmar Contraseña" required>
+                <button type="submit">Registrar</button>
+                <p>¿Ya tienes cuenta? <a href="#" id="showLogin">Iniciar Sesión</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/modal.js' %}"></script>
+
 </body>
 </html>

@@ -1,16 +1,23 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Usuario, BackupRegistro, BackupConfig
 from django.core.files.storage import default_storage
+from django.core.exceptions import ValidationError
+
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+
 from django.utils.encoding import smart_str
+from django.contrib.auth.models import User
 from django.utils.timezone import datetime
+
 from django.utils.timezone import now
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.conf import settings
 from .models import BackupConfig
+
+from django import forms
 import subprocess
 import os
 
@@ -74,6 +81,39 @@ def cambiar_rol_usuario(request, pk):
         messages.error(request, "Rol inválido")
 
     return redirect('usuario_lista')
+
+#------------ Login / Register --------------#
+
+class RegisterForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        if password != confirm_password:
+            raise ValidationError("Las contraseñas no coinciden")
+        
+
+def register_user(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+
+            User.objects.create_user(username=username, email=email, password=password)
+            messages.success(request, 'Registro exitoso. Ahora puedes iniciar sesión.')
+            return redirect('index') 
+    else:
+        form = RegisterForm()
+    return render(request, 'registro.html', {'form': form})
 
 #------------ Backup --------------#
 
