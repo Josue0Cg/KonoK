@@ -5,14 +5,26 @@
     box-sizing: border-box;
 }
 
+.logo {
+    width: 100%;
+    max-width: 300px; 
+    height: auto; 
+    display: block;
+    margin: 0 auto;
+}
+
 /* Barra superior */
 .header {
-    background-color: #06314e;
+    background-color: #0a1a2d;
     padding: 20px;
     text-align: center;
     font-family: 'Arial', sans-serif;
 }
 
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
 .header h1 {
     color: white;
     font-size: 48px;
@@ -22,12 +34,6 @@
 
 .header h1:hover {
     color: #CCCCCC; 
-}
-
-
-/* Hover con CSS puro */
-.header:hover {
-    background-color: #074584; /* Azul oscuro */
 }
 
 /* Navbar General */
