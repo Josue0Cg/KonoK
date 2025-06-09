@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const registerAlert = document.getElementById('registerAlert');
 
     registerForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // 🚫 Detener el submit por defecto
+        e.preventDefault();
 
         // Capturar valores
         const username = document.getElementById('registerUsername').value.trim();
@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = document.getElementById('registerPassword').value.trim();
         const confirmPassword = document.getElementById('registerConfirmPassword').value.trim();
 
-        // Validaciones
         if (!username || !email || !password || !confirmPassword) {
             showError('Todos los campos son obligatorios.');
             return;
@@ -71,21 +70,48 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // 💡 Llenar el hidden field manualmente
+        // 💡 Llenar hidden
         document.getElementById('recaptchaToken').value = recaptchaResponse;
 
-        // ✅ Ahora sí enviamos el formulario
-        registerForm.submit();
+        const formData = new FormData(registerForm);
+
+        fetch('/usuarios/register/', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccess(data.message);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                showError(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showError('Ocurrió un error al registrar.');
+        });
     });
 
     function showError(message) {
         registerAlert.style.display = 'block';
         registerAlert.textContent = message;
+        registerAlert.classList.remove('alert-success');
         registerAlert.classList.add('alert-error');
+    }
+
+    function showSuccess(message) {
+        registerAlert.style.display = 'block';
+        registerAlert.textContent = message;
+        registerAlert.classList.remove('alert-error');
+        registerAlert.classList.add('alert-success');
     }
 
     function validateEmail(email) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email.toLowerCase());
-    } 
+    }
 });

@@ -2,8 +2,10 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Usuario, BackupRegistro, BackupConfig
 from django.core.files.storage import default_storage
 from django.core.exceptions import ValidationError
+from django.views.decorators.csrf import csrf_exempt 
 
-from django.http import HttpResponse, FileResponse
+
+from django.http import HttpResponse, FileResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 
@@ -101,52 +103,46 @@ class RegisterForm(forms.ModelForm):
         if password != confirm_password:
             raise ValidationError("Las contraseñas no coinciden")
         
+@csrf_exempt
 def register_user(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         recaptcha_response = request.POST.get('g-recaptcha-response')
-        
-        # Validar CAPTCHA primero
+
         data = {
-            'secret': '6LfUJForAAAAAIqNdi4mV1-8_W7Rbg-hVU_AaIEl',  # Reemplaza con tu SECRET
+            'secret': '6LfUJForAAAAAIqNdi4mV1-8_W7Rbg-hVU_AaIEl',
             'response': recaptcha_response
         }
         r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
         result = r.json()
-        print("reCAPTCHA result:", result)  # <-- DEBUG AQUI
 
         if not result.get('success'):
-            print("Error de reCAPTCHA:", result.get('error-codes'))
-            messages.error(request, 'Error de reCAPTCHA. Por favor verifica que no eres un robot.')
-            return redirect('index')
+            return JsonResponse({'success': False, 'error': 'Por favor verifica que no eres un robot.'})
 
-        # Validar Formulario
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({'success': False, 'error': 'El nombre de usuario ya está en uso.'})
+
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({'success': False, 'error': 'El correo electrónico ya está en uso.'})
+
         if form.is_valid():
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-
-            # Verificar si el usuario o correo ya existen
-            if User.objects.filter(username=username).exists():
-                print(f"Username {username} ya existe.")
-                messages.error(request, 'El nombre de usuario ya está en uso.')
-                return redirect('index')
-            if User.objects.filter(email=email).exists():
-                print(f"Email {email} ya existe.")
-                messages.error(request, 'El correo electrónico ya está en uso.')
-                return redirect('index')
-
-            # Crear el usuario
             User.objects.create_user(username=username, email=email, password=password)
-            messages.success(request, 'Registro exitoso. Ahora puedes iniciar sesión.')
-            return redirect('index')
+            return JsonResponse({'success': True, 'message': 'Registro exitoso. Ahora puedes iniciar sesión.'})
         else:
-            print("Form no válido:", form.errors)  # <-- DEBUG FORMULARIO
-            messages.error(request, 'Formulario inválido. Verifica los datos.')
-            return redirect('index')
-    else:
-        return redirect('index')
+            errors = form.errors.get_json_data()
+            print("Errores del Formulario:", errors)
+            
+            for field, error_list in errors.items():
+                first_error = error_list[0]['message']
+                return JsonResponse({'success': False, 'error': first_error})
+
     
+    return JsonResponse({'success': False, 'error': 'Método no permitido.'})
+
 #------------ Backup --------------#
 
 def acciones_backup(request):
