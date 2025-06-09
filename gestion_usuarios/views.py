@@ -16,9 +16,11 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.conf import settings
 from .models import BackupConfig
+from django.conf import settings
 
 from django import forms
 import subprocess
+import requests
 import os
 
 
@@ -99,22 +101,52 @@ class RegisterForm(forms.ModelForm):
         if password != confirm_password:
             raise ValidationError("Las contraseñas no coinciden")
         
-
 def register_user(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        
+        # Validar CAPTCHA primero
+        data = {
+            'secret': '6LfUJForAAAAAIqNdi4mV1-8_W7Rbg-hVU_AaIEl',  # Reemplaza con tu SECRET
+            'response': recaptcha_response
+        }
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        result = r.json()
+        print("reCAPTCHA result:", result)  # <-- DEBUG AQUI
+
+        if not result.get('success'):
+            print("Error de reCAPTCHA:", result.get('error-codes'))
+            messages.error(request, 'Error de reCAPTCHA. Por favor verifica que no eres un robot.')
+            return redirect('index')
+
+        # Validar Formulario
         if form.is_valid():
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
+            # Verificar si el usuario o correo ya existen
+            if User.objects.filter(username=username).exists():
+                print(f"Username {username} ya existe.")
+                messages.error(request, 'El nombre de usuario ya está en uso.')
+                return redirect('index')
+            if User.objects.filter(email=email).exists():
+                print(f"Email {email} ya existe.")
+                messages.error(request, 'El correo electrónico ya está en uso.')
+                return redirect('index')
+
+            # Crear el usuario
             User.objects.create_user(username=username, email=email, password=password)
             messages.success(request, 'Registro exitoso. Ahora puedes iniciar sesión.')
-            return redirect('index') 
+            return redirect('index')
+        else:
+            print("Form no válido:", form.errors)  # <-- DEBUG FORMULARIO
+            messages.error(request, 'Formulario inválido. Verifica los datos.')
+            return redirect('index')
     else:
-        form = RegisterForm()
-    return render(request, 'registro.html', {'form': form})
-
+        return redirect('index')
+    
 #------------ Backup --------------#
 
 def acciones_backup(request):

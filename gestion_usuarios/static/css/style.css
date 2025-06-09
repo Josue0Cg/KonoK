@@ -251,7 +251,7 @@
 /* Modal Content */
 .modal-content {
     background-color: #fff;
-    padding: 40px 30px;
+    padding: 40px 3px;
     border-radius: 12px;
     width: 90%;
     max-width: 600px;
@@ -278,12 +278,15 @@
     transition: transform 0.5s ease-in-out;
 }
 
-/* Each Form */
 .form {
-    width: 52%;
+    width: 50%;
     flex: none;
     padding: 20px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Form Styles */
@@ -340,3 +343,17 @@
         font-size: 22px;
     }
 }
+
+.alert {
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+

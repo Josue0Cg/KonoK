@@ -96,13 +96,20 @@
                 <p>¿No tienes cuenta? <a href="#" id="showRegister">Regístrate</a></p>
             </div>
             <!-- Register Form -->
-            <form method="POST" action="{% url 'register_user' %}" class="form register-form">
+            <form method="POST" action="{% url 'register_user' %}" id="registerForm" class="form register-form">
                 {% csrf_token %}
                 <h2>Registro</h2>
-                <input type="text" name="username" placeholder="Usuario" required>
-                <input type="email" name="email" placeholder="Correo" required>
-                <input type="password" name="password" placeholder="Contraseña" required>
-                <input type="password" name="confirm_password" placeholder="Confirmar Contraseña" required>
+                <div id="registerAlert" class="alert" style="display:none;"></div>
+
+                <input type="text" id="registerUsername" name="username" placeholder="Usuario" required>
+                <input type="text" id="registerEmail" name="email" placeholder="Correo" required>
+                <input type="password" id="registerPassword" name="password" placeholder="Contraseña" required>
+                <input type="password" id="registerConfirmPassword" name="confirm_password" placeholder="Confirmar Contraseña" required>
+                
+                <input type="hidden" id="recaptchaToken" name="g-recaptcha-response">
+
+                <div class="g-recaptcha" data-sitekey="6LfUJForAAAAAFKFM6Uri23sYUSgUaZ9kXHfIPLl"></div>
+
                 <button type="submit">Registrar</button>
                 <p>¿Ya tienes cuenta? <a href="#" id="showLogin">Iniciar Sesión</a></p>
             </form>
@@ -110,6 +117,7 @@
     </div>
 </div>
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script src="{% static 'js/modal.js' %}"></script>
 
 </body>
