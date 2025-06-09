@@ -24,7 +24,7 @@ from django import forms
 import subprocess
 import requests
 import os
-
+import re
 
 def index(request):
     return render(request, 'index.html')
@@ -87,7 +87,6 @@ def cambiar_rol_usuario(request, pk):
     return redirect('usuario_lista')
 
 #------------ Login / Register --------------#
-
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
@@ -96,12 +95,21 @@ class RegisterForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'password']
 
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+
+        if not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$', password):
+            raise ValidationError('La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.')
+
+        return password
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
-        if password != confirm_password:
-            raise ValidationError("Las contraseñas no coinciden")
+
+        if password and confirm_password and password != confirm_password:
+            raise ValidationError("Las contraseñas no coinciden.")
         
 @csrf_exempt
 def register_user(request):
