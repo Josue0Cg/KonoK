@@ -102,6 +102,7 @@
                 <input type="password" name="password" id="loginPassword" placeholder="Contraseña" required>
                 <button type="submit">Entrar</button>
                 <p>¿No tienes cuenta? <a href="#" id="showRegister">Regístrate</a></p>
+                <p><a href="{% url 'recuperar_password' %}">¿Olvidaste tu contraseña?</a></p>
                 <div id="loginAlert" class="alert" style="display: none;"></div>
             </form>
             

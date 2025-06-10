@@ -14,7 +14,7 @@ from django.shortcuts import render, redirect
 from django.utils.encoding import smart_str
 from django.contrib.auth.models import User
 from django.utils.timezone import datetime
-
+from django.core.mail import send_mail
 
 from django.utils.timezone import now
 from django.urls import reverse_lazy
@@ -26,6 +26,8 @@ from django.conf import settings
 from django import forms
 import subprocess
 import requests
+import random
+import string
 import os
 import re
 
@@ -173,6 +175,28 @@ def register_user(request):
 
     
     return JsonResponse({'success': False, 'error': 'Método no permitido.'})
+
+def recuperar_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            nueva_password = ''.join(random.choices(string.ascii_letters + string.digits + "!@#$%^&*", k=10))
+            user.set_password(nueva_password)
+            user.save()
+
+            send_mail(
+                'Tu nueva contraseña en KonoK',
+                f'Hola {user.username},\n\nTu nueva contraseña es: {nueva_password}\n\nTe recomendamos cambiarla después de iniciar sesión.',
+                'noreply@konok.com',
+                [email],
+                fail_silently=False,
+            )
+            return render(request, 'recuperar_password.html', {'mensaje': 'Se envió una nueva contraseña a tu correo.'})
+        except User.DoesNotExist:
+            return render(request, 'recuperar_password.html', {'error': 'Este correo no está registrado.'})
+    
+    return render(request, 'recuperar_password.html')
 
 #------------ Backup --------------#
 
