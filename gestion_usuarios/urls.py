@@ -12,6 +12,8 @@ from .views import (
     visualizar_backup,
     cambiar_rol_usuario,  
     register_user,
+    login_user,
+    logout_user,
 )
 
 urlpatterns = [
@@ -20,6 +22,9 @@ urlpatterns = [
     path('editar/<int:pk>/', UsuarioUpdate.as_view(), name='usuario_editar'),
     path('eliminar/<int:pk>/', UsuarioDelete.as_view(), name='usuario_eliminar'),
     path('rol/<int:pk>/', cambiar_rol_usuario, name='cambiar_rol_usuario'),
+    
+    path('logout/', logout_user, name='logout_user'),
+    path('login/', login_user, name='login_user'),
     path('register/', register_user, name='register_user'),
 
     #backups

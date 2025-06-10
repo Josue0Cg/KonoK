@@ -3,6 +3,8 @@ from .models import Usuario, BackupRegistro, BackupConfig
 from django.core.files.storage import default_storage
 from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt 
+from django.contrib.auth import authenticate, login, logout
+
 
 
 from django.http import HttpResponse, FileResponse, JsonResponse
@@ -12,6 +14,7 @@ from django.shortcuts import render, redirect
 from django.utils.encoding import smart_str
 from django.contrib.auth.models import User
 from django.utils.timezone import datetime
+
 
 from django.utils.timezone import now
 from django.urls import reverse_lazy
@@ -87,6 +90,26 @@ def cambiar_rol_usuario(request, pk):
     return redirect('usuario_lista')
 
 #------------ Login / Register --------------#
+
+def login_user(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(email=email)
+            user = authenticate(request, username=user.username, password=password)
+            if user is not None:
+                login(request, user)
+                return JsonResponse({'success': True, 'message': f'Bienvenido, {user.username}'})
+            else:
+                return JsonResponse({'success': False, 'error': 'Credenciales inválidas'})
+        except User.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Usuario no encontrado'})
+        
+def logout_user(request):
+    logout(request)
+    return redirect('index')
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)

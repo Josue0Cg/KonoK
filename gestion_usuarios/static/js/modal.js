@@ -115,3 +115,55 @@ document.addEventListener('DOMContentLoaded', function() {
         return re.test(email.toLowerCase());
     }
 });
+
+const loginForm = document.getElementById('loginForm');
+const loginAlert = document.getElementById('loginAlert');
+
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+
+    if (!email || !password) {
+        showLoginError('Todos los campos son obligatorios.');
+        return;
+    }
+
+    const formData = new FormData(loginForm);
+
+    fetch('/usuarios/login/', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showLoginSuccess(data.message);
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            showLoginError(data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showLoginError('Ocurrió un error al iniciar sesión.');
+    });
+});
+
+function showLoginError(message) {
+    loginAlert.style.display = 'block';
+    loginAlert.textContent = message;
+    loginAlert.classList.remove('alert-success');
+    loginAlert.classList.add('alert-error');
+}
+
+function showLoginSuccess(message) {
+    loginAlert.style.display = 'block';
+    loginAlert.textContent = message;
+    loginAlert.classList.remove('alert-error');
+    loginAlert.classList.add('alert-success');
+}
+

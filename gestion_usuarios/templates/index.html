@@ -18,9 +18,16 @@
     <!-- Barra de navegación -->
     <nav class="navbar">
         <ul>
-            <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Inicio</a></li>
-            <li><a href="#" id="loginBtn">Login</a></li>
-            <li><a href="/contacto/">Contacto</a></li>
+           <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Inicio</a></li>
+
+            {% if user.is_authenticated %}
+                <li><a href="#">Hola, {{ user.username }}</a></li>
+                <li><a href="{% url 'logout_user' %}">Cerrar sesión</a></li>
+            {% else %}
+                <li><a href="#" id="loginBtn">Login</a></li>
+            {% endif %}
+
+            <li><a href="/contacto/" class="{% if request.path == '/contacto/' %}active{% endif %}">Contacto</a></li>
         </ul>
     </nav>
     <hr class="divider">
@@ -88,13 +95,16 @@
         <span class="close" id="closeModal">&times;</span>
         <div class="form-container" id="formContainer">
             <!-- Login Form -->
-            <div class="form login-form">
+            <form class="form login-form" id="loginForm" method="POST">
+                {% csrf_token %}
                 <h2>Login</h2>
-                <input type="email" placeholder="email" required>
-                <input type="password" placeholder="Contraseña" required>
+                <input type="email" name="email" id="loginEmail" placeholder="Correo electrónico" required>
+                <input type="password" name="password" id="loginPassword" placeholder="Contraseña" required>
                 <button type="submit">Entrar</button>
                 <p>¿No tienes cuenta? <a href="#" id="showRegister">Regístrate</a></p>
-            </div>
+                <div id="loginAlert" class="alert" style="display: none;"></div>
+            </form>
+            
             <!-- Register Form -->
             <form method="POST" action="{% url 'register_user' %}" id="registerForm" class="form register-form">
                 {% csrf_token %}
