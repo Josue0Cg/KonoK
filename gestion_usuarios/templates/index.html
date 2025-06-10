@@ -28,7 +28,8 @@
                 <li><a href="#" id="loginBtn">Login</a></li>
             {% endif %}
 
-            <li><a href="/contacto/" class="{% if request.path == '/contacto/' %}active{% endif %}">Contacto</a></li>
+            <li><a href="{% url 'contacto' %}" class="{% if request.path == '/contacto/' %}active{% endif %}">Contacto</a></li>
+            <li><a href="/contacto/" class="{% if request.path == '/contacto/' %}active{% endif %}">Nosotros</a></li>
         </ul>
     </nav>
 

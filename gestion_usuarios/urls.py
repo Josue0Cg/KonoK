@@ -16,6 +16,7 @@ from .views import (
     logout_user,
     recuperar_password,
     buzon_notificaciones,
+    contacto,
 )
 
 urlpatterns = [
@@ -30,6 +31,7 @@ urlpatterns = [
     path('register/', register_user, name='register_user'),
     path('recuperar/', recuperar_password, name='recuperar_password'),
     path('buzon/', buzon_notificaciones, name='buzon'),
+    path('contacto/', contacto, name='contacto'),
 
 
     #backups

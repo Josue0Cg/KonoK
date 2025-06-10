@@ -1,0 +1,155 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacto - KonoK</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <img src="{% static 'img/Konok_logo.png' %}" alt="Logo KonoK" class="logo">
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Inicio</a></li>
+            <li><a href="{% url 'contacto' %}" class="{% if request.path == '/contacto/' %}active{% endif %}">Contacto</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="#">Hola, {{ user.username }}</a></li>
+                <li><a href="{% url 'logout_user' %}">Cerrar sesión</a></li>
+            {% else %}
+                <li><a href="#" id="loginBtn">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <hr class="divider">
+
+    <section class="info">
+        <h2>Déjanos tu comentario o duda</h2>
+        <div class="info-content">
+            <form method="POST" class="comentario-form">
+                {% csrf_token %}
+                {{ form.as_p }}  <!-- Mostrar el formulario sin el campo 'nombre' -->
+                <button type="submit" class="submit-btn">Enviar comentario</button>
+            </form>
+
+            {% if messages %}
+                <div class="alert-container">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- Mostrar los comentarios -->
+    <section class="comentarios">
+        <h3>Comentarios y Dudas</h3>
+        {% for comentario in comentarios %}
+            <div class="comentario">
+                <p><strong>{{ comentario.nombre }}</strong> - <i>{{ comentario.fecha_creacion }}</i></p>
+                <p>{{ comentario.comentario }}</p>
+            </div>
+        {% empty %}
+            <p>No hay comentarios todavía.</p>
+        {% endfor %}
+    </section>
+
+    <style>
+        .comentario-form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .comentario-form input,
+        .comentario-form textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .comentario-form textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .comentario-form button {
+            padding: 12px;
+            background-color: #1c6fa7;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .comentario-form button:hover {
+            background-color: #074584;
+        }
+
+        .comentarios {
+            margin-top: 30px;
+        }
+
+        .comentario {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .comentario p {
+            margin: 5px 0;
+        }
+
+        .comentario strong {
+            font-size: 16px;
+            color: #1c6fa7;
+        }
+
+        .comentario i {
+            font-size: 14px;
+            color: #777;
+        }
+
+        /* Estilo para alertas */
+        .alert-container {
+            margin-top: 20px;
+        }
+
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    </style>
+</body>
+</html>

@@ -30,3 +30,10 @@ class BackupConfig(models.Model):
     def __str__(self):
         estado = "Activo" if self.activa else "Inactivo"
         return f"Backup automático a las {self.hora_backup} ({estado})"
+class Comentario(models.Model):
+    nombre = models.CharField(max_length=100)
+    comentario = models.TextField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)  # Fecha y hora en que se crea el comentario
+
+    def __str__(self):
+        return f"Comentario de {self.nombre} el {self.fecha_creacion}"

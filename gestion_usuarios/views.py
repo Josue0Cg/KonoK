@@ -24,7 +24,7 @@ from django.contrib import messages
 from django.conf import settings
 from .models import BackupConfig
 from django.conf import settings
-
+from .models import Comentario
 from django import forms
 import subprocess
 import requests
@@ -41,6 +41,30 @@ def buzon_notificaciones(request):
         'notificaciones': messages.get_messages(request)
     })
 
+class ComentarioForm(forms.ModelForm):
+    class Meta:
+        model = Comentario
+        fields = ['comentario']  # Solo necesitamos el campo comentario
+        widgets = {
+            'comentario': forms.Textarea(attrs={'placeholder': 'Escribe tu comentario o duda aquí...', 'rows': 4, 'cols': 40}),
+        }
+
+def contacto(request):
+    if request.method == 'POST':
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.nombre = request.user.username 
+            comentario.save()
+            messages.success(request, "Tu comentario se ha enviado con éxito.")
+            return redirect('contacto') 
+
+    else:
+        form = ComentarioForm()
+
+    comentarios = Comentario.objects.all().order_by('-fecha_creacion')
+
+    return render(request, 'contacto.html', {'form': form, 'comentarios': comentarios})
 #----------- CRUD Usuarios -----------#
 class UsuarioList(ListView):
     model = Usuario
