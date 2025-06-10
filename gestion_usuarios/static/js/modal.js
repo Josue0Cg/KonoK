@@ -167,3 +167,10 @@ function showLoginSuccess(message) {
     loginAlert.classList.add('alert-success');
 }
 
+function mostrarNotificaciones() {
+    document.getElementById("buzonModal").style.display = "block";
+}
+
+document.getElementById("closeBuzon").onclick = function() {
+    document.getElementById("buzonModal").style.display = "none";
+}

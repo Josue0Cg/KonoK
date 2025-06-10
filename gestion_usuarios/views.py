@@ -34,7 +34,13 @@ import re
 def index(request):
     return render(request, 'index.html')
 
-
+def buzon_notificaciones(request):
+    notificaciones = [
+        "Tu contraseña fue restablecida exitosamente.",
+        "Tienes una nueva cotización pendiente.",
+        "Se actualizó tu perfil."
+    ]
+    return render(request, 'buzon.html', {'notificaciones': notificaciones})
 
 #----------- CRUD Usuarios -----------#
 class UsuarioList(ListView):

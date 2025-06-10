@@ -23,6 +23,7 @@
             {% if user.is_authenticated %}
                 <li><a href="#">Hola, {{ user.username }}</a></li>
                 <li><a href="{% url 'logout_user' %}">Cerrar sesión</a></li>
+                <li><a href="#" id="buzonBtn" onclick="mostrarNotificaciones()">Buzón</a></li>
             {% else %}
                 <li><a href="#" id="loginBtn">Login</a></li>
             {% endif %}
@@ -31,6 +32,19 @@
         </ul>
     </nav>
     <hr class="divider">
+
+        <div id="buzonModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close" id="closeBuzon">&times;</span>
+                <h2>Notificaciones</h2>
+                <ul>
+                    {% for notificacion in notificaciones %}
+                        <li>{{ notificacion }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
     <!-- Sección Información -->
     <section class="info">
         <h2>Nosotros</h2>
