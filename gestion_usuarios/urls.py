@@ -14,7 +14,8 @@ from .views import (
     register_user,
     login_user,
     logout_user,
-    recuperar_password
+    recuperar_password,
+    buzon_notificaciones,
 )
 
 urlpatterns = [
@@ -28,6 +29,7 @@ urlpatterns = [
     path('login/', login_user, name='login_user'),
     path('register/', register_user, name='register_user'),
     path('recuperar/', recuperar_password, name='recuperar_password'),
+    path('buzon/', buzon_notificaciones, name='buzon'),
 
 
     #backups

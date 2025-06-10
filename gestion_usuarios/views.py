@@ -15,6 +15,8 @@ from django.utils.encoding import smart_str
 from django.contrib.auth.models import User
 from django.utils.timezone import datetime
 from django.core.mail import send_mail
+from django.utils import timezone
+
 
 from django.utils.timezone import now
 from django.urls import reverse_lazy
@@ -35,12 +37,9 @@ def index(request):
     return render(request, 'index.html')
 
 def buzon_notificaciones(request):
-    notificaciones = [
-        "Tu contraseña fue restablecida exitosamente.",
-        "Tienes una nueva cotización pendiente.",
-        "Se actualizó tu perfil."
-    ]
-    return render(request, 'buzon.html', {'notificaciones': notificaciones})
+    return render(request, 'buzon.html', {
+        'notificaciones': messages.get_messages(request)
+    })
 
 #----------- CRUD Usuarios -----------#
 class UsuarioList(ListView):
@@ -148,6 +147,7 @@ def register_user(request):
         form = RegisterForm(request.POST)
         recaptcha_response = request.POST.get('g-recaptcha-response')
 
+        # Verificar reCAPTCHA
         data = {
             'secret': '6LfUJForAAAAAIqNdi4mV1-8_W7Rbg-hVU_AaIEl',
             'response': recaptcha_response
@@ -161,6 +161,7 @@ def register_user(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
 
+        # Verificar si el nombre de usuario o el correo ya están registrados
         if User.objects.filter(username=username).exists():
             return JsonResponse({'success': False, 'error': 'El nombre de usuario ya está en uso.'})
 
@@ -169,7 +170,14 @@ def register_user(request):
 
         if form.is_valid():
             password = form.cleaned_data['password']
-            User.objects.create_user(username=username, email=email, password=password)
+            user = User.objects.create_user(username=username, email=email, password=password)
+
+            # Crear una notificación con la hora y la fecha de creación
+            ahora = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+            saludo = f"¡Bienvenido, {username}! Tu cuenta fue creada el {ahora}."
+            messages.success(request, saludo)
+
+            # Responder al frontend
             return JsonResponse({'success': True, 'message': 'Registro exitoso. Ahora puedes iniciar sesión.'})
         else:
             errors = form.errors.get_json_data()
@@ -179,10 +187,12 @@ def register_user(request):
                 first_error = error_list[0]['message']
                 return JsonResponse({'success': False, 'error': first_error})
 
-    
     return JsonResponse({'success': False, 'error': 'Método no permitido.'})
 
 def recuperar_password(request):
+    if request.method == 'GET':
+        return render(request, 'recuperar_password.html')  # Mostrar formulario para recuperar contraseña
+    
     if request.method == 'POST':
         email = request.POST.get('email')
         try:
@@ -191,6 +201,7 @@ def recuperar_password(request):
             user.set_password(nueva_password)
             user.save()
 
+            # Enviar correo de confirmación
             send_mail(
                 'Tu nueva contraseña en KonoK',
                 f'Hola {user.username},\n\nTu nueva contraseña es: {nueva_password}\n\nTe recomendamos cambiarla después de iniciar sesión.',
@@ -198,12 +209,20 @@ def recuperar_password(request):
                 [email],
                 fail_silently=False,
             )
-            return render(request, 'recuperar_password.html', {'mensaje': 'Se envió una nueva contraseña a tu correo.'})
-        except User.DoesNotExist:
-            return render(request, 'recuperar_password.html', {'error': 'Este correo no está registrado.'})
-    
-    return render(request, 'recuperar_password.html')
 
+            # Obtener la hora actual y agregarla como notificación
+            ahora = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+            mensaje = f"Tu contraseña fue restablecida el {ahora}."
+
+            # Crear la notificación para el buzón
+            messages.success(request, mensaje)
+
+            # Redirigir al buzón de notificaciones
+            return redirect('buzon')  # Redirige a la vista de notificaciones (buzon.html)
+
+        except User.DoesNotExist:
+            messages.error(request, "Este correo no está registrado.")
+            return render(request, 'recuperar_password.html', {'error': 'Este correo no está registrado.'})
 #------------ Backup --------------#
 
 def acciones_backup(request):

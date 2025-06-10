@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buzón de Notificaciones</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <img src="{% static 'img/Konok_logo.png' %}" alt="Logo KonoK" class="logo">
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Inicio</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="#">Hola, {{ user.username }}</a></li>
+                <li><a href="{% url 'logout_user' %}">Cerrar sesión</a></li>
+            {% else %}
+                <li><a href="#" id="loginBtn">Login</a></li>
+            {% endif %}
+            <li><a href="/contacto/">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <hr class="divider">
+
+    <!-- Buzón de Notificaciones -->
+    <section class="info">
+        <h2>Notificaciones</h2>
+        <div class="info-content">
+            {% if notificaciones %}
+                <ul>
+                    {% for notificacion in notificaciones %}
+                        <li class="notification-item">{{ notificacion.mensaje }} <br><small>{{ notificacion.fecha_creacion }}</small></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No tienes nuevas notificaciones.</p>
+            {% endif %}
+        </div>
+    </section>
+</body>
+</html>

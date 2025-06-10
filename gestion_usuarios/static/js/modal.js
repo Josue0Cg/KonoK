@@ -167,10 +167,20 @@ function showLoginSuccess(message) {
     loginAlert.classList.add('alert-success');
 }
 
+// Función para mostrar el modal del Buzón
 function mostrarNotificaciones() {
     document.getElementById("buzonModal").style.display = "block";
 }
 
+// Función para cerrar el modal del Buzón
 document.getElementById("closeBuzon").onclick = function() {
     document.getElementById("buzonModal").style.display = "none";
 }
+
+// Cerrar el modal si se hace clic fuera de él
+window.onclick = function(event) {
+    if (event.target == document.getElementById("buzonModal")) {
+        document.getElementById("buzonModal").style.display = "none";
+    }
+}
+
