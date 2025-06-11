@@ -21,9 +21,11 @@
             {% if user.is_authenticated %}
                 <li><a href="#">Hola, {{ user.username }}</a></li>
                 <li><a href="{% url 'logout_user' %}">Cerrar sesión</a></li>
+                <li><a href="{% url 'buzon' %}" id="buzonBtn">Buzón</a></li> 
             {% else %}
                 <li><a href="#" id="loginBtn">Login</a></li>
             {% endif %}
+            <li><a href="/contacto/" class="{% if request.path == '/contacto/' %}active{% endif %}">Nosotros</a></li>
         </ul>
     </nav>
 

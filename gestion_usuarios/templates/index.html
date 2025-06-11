@@ -23,13 +23,14 @@
             {% if user.is_authenticated %}
                 <li><a href="#">Hola, {{ user.username }}</a></li>
                 <li><a href="{% url 'logout_user' %}">Cerrar sesión</a></li>
-                <li><a href="{% url 'buzon' %}" id="buzonBtn">Buzón</a></li>  <!-- Redirige directamente al buzón -->
+                <li><a href="{% url 'buzon' %}" id="buzonBtn">Buzón</a></li>
             {% else %}
                 <li><a href="#" id="loginBtn">Login</a></li>
             {% endif %}
 
             <li><a href="{% url 'contacto' %}" class="{% if request.path == '/contacto/' %}active{% endif %}">Contacto</a></li>
             <li><a href="/contacto/" class="{% if request.path == '/contacto/' %}active{% endif %}">Nosotros</a></li>
+            <li><a href="javascript:void(0);" onclick="openMapaSitio()">Mapa Del Sitio</a></li>
         </ul>
     </nav>
 
@@ -131,10 +132,58 @@
     </div>
 </div>
 
+<div id="modalMapaSitio" class="modal-sitio">
+  <div class="modal-content-sitio">
+    <span class="close-sitio" onclick="closeMapaSitio()">&times;</span>
+    <h2 style="text-align: center;">Mapa del Sitio</h2>
+
+    <div class="tree-container">
+      <div class="tree">
+        <ul>
+          <li>
+            <a href="#">Konok</a>
+            <ul>
+              <li>
+                <a href="/">Inicio</a>
+                <ul>
+                  <li><a href="#" id="loginBtn">Login</a></li>
+                  <li><a href="{% url 'buzon' %}">Buzón</a></li>
+                  <li><a href="{% url 'contacto' %}">Contacto</a></li>
+                  <li><a href="">Nosotros</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Electrónicos</a></li>
+              <li><a href="#">Cómputo</a></li>
+              <li><a href="#">Soporte Técnico</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script src="{% static 'js/modal.js' %}"></script>
 <script>
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="Ht6IvcOoqWKDILCWY3x5x";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
+
+<script>
+function openMapaSitio() {
+  document.getElementById("modalMapaSitio").style.display = "block";
+}
+
+function closeMapaSitio() {
+  document.getElementById("modalMapaSitio").style.display = "none";
+}
+
+window.onclick = function(event) {
+  const modal = document.getElementById("modalMapaSitio");
+  if (event.target === modal) {
+    closeMapaSitio();
+  }
+}
 </script>
 
 </body>
